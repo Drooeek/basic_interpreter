@@ -11,17 +11,23 @@ class Expression;
 class ParsedLine {
  private:
   std::optional<int> line_number_;
-  Statement* statement_;
+  std::unique_ptr<Statement> statement_;
 
  public:
   ParsedLine();
   ~ParsedLine();
 
+  ParsedLine(ParsedLine&&) noexcept = default;
+  ParsedLine& operator=(ParsedLine&&) noexcept = default;
+
+  ParsedLine(const ParsedLine&) = delete;
+  ParsedLine& operator=(const ParsedLine&) = delete;
+
   void setLine(int line);
   std::optional<int> getLine();
-  void setStatement(Statement* stmt);
+  void setStatement(std::unique_ptr<Statement> stmt);
   Statement* getStatement() const;
-  Statement* fetchStatement();
+  std::unique_ptr<Statement> fetchStatement();
 };
 
 class Parser {
@@ -30,21 +36,21 @@ class Parser {
                        const std::string& originLine) const;
 
  private:
-  Statement* parseStatement(TokenStream& tokens,
+  std::unique_ptr<Statement> parseStatement(TokenStream& tokens,
                             const std::string& originLine) const;
-  Statement* parseLet(TokenStream& tokens, const std::string& originLine) const;
-  Statement* parsePrint(TokenStream& tokens,
+  std::unique_ptr<Statement> parseLet(TokenStream& tokens, const std::string& originLine) const;
+  std::unique_ptr<Statement> parsePrint(TokenStream& tokens,
                         const std::string& originLine) const;
-  Statement* parseInput(TokenStream& tokens,
+  std::unique_ptr<Statement> parseInput(TokenStream& tokens,
                         const std::string& originLine) const;
-  Statement* parseGoto(TokenStream& tokens,
+  std::unique_ptr<Statement> parseGoto(TokenStream& tokens,
                        const std::string& originLine) const;
-  Statement* parseIf(TokenStream& tokens, const std::string& originLine) const;
-  Statement* parseRem(TokenStream& tokens, const std::string& originLine) const;
-  Statement* parseEnd(TokenStream& tokens, const std::string& originLine) const;
+  std::unique_ptr<Statement> parseIf(TokenStream& tokens, const std::string& originLine) const;
+  std::unique_ptr<Statement> parseRem(TokenStream& tokens, const std::string& originLine) const;
+  std::unique_ptr<Statement> parseEnd(TokenStream& tokens, const std::string& originLine) const;
 
-  Expression* parseExpression(TokenStream& tokens) const;
-  Expression* parseExpression(TokenStream& tokens, int precedence) const;
+  std::unique_ptr<Expression> parseExpression(TokenStream& tokens) const;
+  std::unique_ptr<Expression> parseExpression(TokenStream& tokens, int precedence) const;
 
   int getPrecedence(TokenType op) const;
   int parseLiteral(const Token* token) const;
