@@ -13,6 +13,7 @@ int main() {
   Lexer lexer;
   Parser parser;
   Program program;
+  program.initVars();
 
   std::string line;
   while (std::getline(std::cin, line)) {
@@ -41,6 +42,12 @@ int main() {
           return 0;
         } case TokenType::HELP : {
           std::cout << "Yeah~\n";
+          continue;
+        } case TokenType::INDENT : {
+          program.addVars();
+          continue;
+        } case TokenType::DEDENT : {
+          program.removeVars();
           continue;
         }
       }

@@ -96,3 +96,21 @@ class EndStatement : public Statement {
 
   private:
 };
+
+// INDENT
+class IndentStatement : public Statement {
+  public:
+    explicit IndentStatement(std::string source);
+    void execute(VarState& state, Program& program) const override;
+
+  private:
+};
+
+// DEDENT
+class DedentStatement : public Statement {
+  public:
+    explicit DedentStatement(std::string source);
+    void execute(VarState& state, Program& program) const override;
+
+  private:
+};

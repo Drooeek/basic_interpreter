@@ -93,3 +93,19 @@ EndStatement::EndStatement(std::string source)
 void EndStatement::execute(VarState& state, Program& program) const {
   program.programEnd();
 }
+
+// INDENT
+IndentStatement::IndentStatement(std::string source)
+  : Statement(std::move(source)) {}
+
+void IndentStatement::execute(VarState& state, Program& program) const {
+  program.addVars();
+}
+
+// DEDENT
+DedentStatement::DedentStatement(std::string source)
+  : Statement(std::move(source)) {}
+
+void DedentStatement::execute(VarState& state, Program& program) const {
+  program.removeVars();
+}

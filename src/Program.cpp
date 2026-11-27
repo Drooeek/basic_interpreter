@@ -41,13 +41,27 @@ void Program::run() {
     }
 }
 void Program::list() const { recorder_.printLines(); }
-void Program::clear() { recorder_.clear(); vars_.clear(); resetAfterRun(); }
+void Program::clear() { recorder_.clear(); vars_.clear(); initVars(); resetAfterRun(); }
 
-void Program::execute(const Statement* stmt) { if (stmt) stmt->execute(vars_, *this); }
+void Program::execute(const Statement* stmt) { if (stmt) stmt->execute(vars_.back(), *this); }
 
 int Program::getPC() const noexcept { return programCounter_; }
 void Program::changePC(int line) { programCounter_ = line; }
 void Program::programEnd() { programEnd_ = true; }
+
+void Program::initVars() {
+  VarState globe;
+  vars_.push_back(globe);
+}
+void Program::addVars() {
+  vars_.push_back(vars_.back());
+}
+void Program::removeVars() {
+  if (vars_.size() == 1) {
+    throw BasicError("SCOPE UNDERFLOW");
+  }
+  vars_.pop_back();
+}
 
 void Program::resetAfterRun() noexcept { 
   programCounter_ = -1;

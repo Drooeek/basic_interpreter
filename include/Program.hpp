@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include "Recorder.hpp"
 #include "VarState.hpp"
@@ -24,9 +25,13 @@ class Program {
   void changePC(int line);
   void programEnd();
 
+  void initVars();
+  void addVars();
+  void removeVars();
+
  private:
   Recorder recorder_;
-  VarState vars_;
+  std::vector<VarState> vars_;
   int programCounter_;
   bool programEnd_;
 
